@@ -1,0 +1,55 @@
+- name: Configure Pure Storage Hosts
+  hosts: localhost
+  collections:
+  - purestorage.flasharray
+  gather_facts: yes
+  vars_files:
+    - host_vars/purearray.yml
+  tasks:
+  - name: Create prdESX01 
+    purefa_host:
+      host: "prdESX01"
+      protocol: iscsi
+      iqn: 
+        - iqn.
+      fa_url: "{{fa_url}}"
+      api_token: "{{fa_api_token}}"
+  - name: Create "prdESX02"
+    purefa_host:
+      host: "prdESX02"
+      protocol: iscsi
+      iqn: 
+        - iqn
+      fa_url: "{{fa_url}}"
+      api_token: "{{fa_api_token}}"      
+ 
+  - name: Create new volumes 
+    purefa_volume:
+      name: volume-01
+      size: 10T
+      fa_url: "{{fa_url}}"
+      api_token: "{{fa_api_token}}"
+      state: present
+  - name: Create new volumes 
+    purefa_volume:
+      name: volume-02
+      size: 10T
+      fa_url: "{{fa_url}}"
+      api_token: "{{fa_api_token}}"
+      state: present
+
+  - name: Add hosts to hostgroup
+    purefa_hg:
+      hostgroup: prdESX
+      host:
+        - "prdESX01"
+        - "prdESX02"
+      volume: 
+        - volume-01
+        - volume-02
+      fa_url: "{{fa_url}}"
+      api_token: "{{fa_api_token}}"
+
+
+ 
+  
