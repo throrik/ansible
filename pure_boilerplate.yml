@@ -5,6 +5,7 @@
   gather_facts: yes
   vars_files:
     - host_vars/purearray.yml
+    - purestorage.flasharray.purefa_network
   tasks:
   - name: Create prdESX01 
     purefa_host:
@@ -51,5 +52,11 @@
       api_token: "{{fa_api_token}}"
 
 
- 
-  
+  # run pure commands which arne't in the collections yet
+    - name: ct0.eth2 replication
+      raw: 
+        "purenetwork eth setattr ct0.eth2 --address 10.x.x.x --gateway 10.x.x.x --netmask 255.255.255.0"
+      register: pureoutput 
+    - debug: 
+        var: pureoutput
+   # - fail:
